@@ -13,15 +13,15 @@ public class Relatorio extends Regex {
     Pci logPci = new Pci();
     TotalPortadorasBandas logTotalPortadorasBandas = new TotalPortadorasBandas();
 
-    public void gerarScript(String[] siteName, String path) {
-        for (int i = 0; i < siteName.length; i++) {
+    public void gerarScript(String[] site, String pasta) {
+        for (int i = 0; site[i] != null; i++) {
             System.out.println();
             if (i == 0) {
-                System.out.println("amos " + siteName[i]);
+                System.out.println("amos " + site[i]);
             } else {
-                System.out.println("l amos " + siteName[i]);
+                System.out.println("l amos " + site[i]);
             }
-            System.out.println("@L " + path + "\\" + siteName[i] + ".log\n" +
+            System.out.println("@L " + pasta + "\\ferramentas\\logs\\" + site[i] + ".log\n" +
                     "lt all\n" +
                     "unset $CELL96\n" +
                     "unset $NR_OF_REL\n" +
@@ -48,7 +48,6 @@ public class Relatorio extends Regex {
     public void gerarInformacao(String nomeSite, String arquivoLog, String[] portadorasRequisitadas, String pasta) {
 
         System.out.println("SITE: " + nomeSite);
-
         String vizinhos = logVizinhos.info(arquivoLog, portadorasRequisitadas);
         String latLong = logLatLong.info(arquivoLog);
         String mimo = logMimo.info(arquivoLog, portadorasRequisitadas);

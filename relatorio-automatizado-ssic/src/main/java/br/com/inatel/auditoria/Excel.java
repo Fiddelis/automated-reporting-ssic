@@ -20,7 +20,7 @@ public class Excel {
         for (int i = 0; i < portadorasRequisitadas.length; i++) {
             novasPortadoras.append(portadorasRequisitadas[i]);
             if (i < portadorasRequisitadas.length - 1) {
-                novasPortadoras.append(", ");
+                novasPortadoras.append("/");
             }
         }
 
@@ -32,7 +32,7 @@ public class Excel {
             indice = cgid.indexOf("/", indice + 1);
         }
 
-        try (FileInputStream fileIn = new FileInputStream(pasta + "\\auditoria.xlsx");
+        try (FileInputStream fileIn = new FileInputStream(pasta + "\\ferramentas\\auditoria.xlsx");
              Workbook workbook = new XSSFWorkbook(fileIn)) {
             Sheet sheet = workbook.getSheetAt(0);
 
@@ -58,7 +58,7 @@ public class Excel {
 
             linha = sheet.getRow(7);
             celula = linha.getCell(1);
-            celula.setCellValue("Novas Portadoras: " + novasPortadoras);
+            celula.setCellValue("Novas Portadoras: " + novasPortadoras + " MHz");
 
             linha = sheet.getRow(1);
             celula = linha.getCell(3);
@@ -88,11 +88,13 @@ public class Excel {
             celula = linha.getCell(5);
             celula.setCellValue(vizinhos);
 
-            try (FileOutputStream fileOut = new FileOutputStream(pasta + "\\" + nomeSite + ".xlsx")) {
+            try (FileOutputStream fileOut = new FileOutputStream(pasta + "\\relatorios\\" + nomeSite + "\\auditoria.xlsx")) {
                 workbook.write(fileOut);
             }
         } catch (IOException e) {
-            System.out.println("Arquivo 'auditoria.xls' não encontrado");
+            System.out.println("Arquivo 'auditoria.xlsx' não encontrado");
         }
     }
+
+
 }

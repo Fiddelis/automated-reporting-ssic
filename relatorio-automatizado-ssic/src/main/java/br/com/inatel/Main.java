@@ -2,6 +2,7 @@ package br.com.inatel;
 
 import br.com.inatel.auditoria.Relatorio;
 import br.com.inatel.auditoria.utils.LeituraLog;
+import br.com.inatel.relatorio.Qgis;
 
 import java.util.Scanner;
 
@@ -11,31 +12,49 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         LeituraLog leituraLog = new LeituraLog();
         Relatorio relatorio = new Relatorio();
-        char escolha;
+        String[] site = new String[20];
+        String[] portadorasRequisitadas = new String[20];
+        String[] cidades = new String[20];
+        char[] siteSeisSetores = new char[20];
+        char escolha = 's';
+        int i = 0;
 
-        String[] nomeSite;
-        String[] portadorasRequisitadas;
-        String pasta;
+        System.out.print("Pasta do arquivo JAR: ");
+        String pasta = sc.nextLine();
+        while(escolha == 's') {
+            System.out.print("Nome do Site: ");
+            site[i] = sc.nextLine();
 
-        System.out.print("Nome do Site: ");
-        nomeSite = sc.nextLine().split(" ");
+            System.out.print("Site 6 setores? (s/n): ");
+            siteSeisSetores[i] = sc.nextLine().charAt(0);
 
-        System.out.print("Portadoras Requisitadas: ");
-        portadorasRequisitadas = sc.nextLine().split(" ");
+            System.out.print("Portadoras Requisitadas (700 1800 1800C 2100 2300 2600 2600Q): ");
+            portadorasRequisitadas[i] = sc.nextLine();
 
-        System.out.print("Pasta: ");
-        pasta = sc.nextLine();
+            System.out.print("Cidade: ");
+            cidades[i] = sc.nextLine();
 
-        relatorio.gerarScript(nomeSite, pasta);
+            System.out.print("Mais site? (s/n): ");
+            escolha = sc.nextLine().charAt(0);
+
+            i++;
+        }
+
+        relatorio.gerarScript(site, pasta);
+
         System.out.println();
-
-        System.out.println("Feito? (s/n): ");
+        System.out.print("Feito? (s/n): ");
 
         escolha = sc.nextLine().charAt(0);
         switch (escolha) {
             case 's' -> {
-                for (String s : nomeSite) {
-                    relatorio.gerarInformacao(s, leituraLog.read(pasta +  "\\"+ s + ".log"), portadorasRequisitadas, pasta);
+                Qgis qgis = new Qgis();
+
+                for (i = 0; site[i] != null; i++) {
+                    qgis.gerarRelatorio(portadorasRequisitadas[i].split(" "), site[i], cidades[i], siteSeisSetores[i], pasta);
+
+                    relatorio.gerarInformacao(site[i], leituraLog.read(pasta +  "\\ferramentas\\logs\\" + site[i] + ".log"), portadorasRequisitadas[i].split(" "), pasta);
+
                     System.out.println();
                 }
             }

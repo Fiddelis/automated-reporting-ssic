@@ -33,11 +33,11 @@ public class Banda extends Regex {
                         .append(b, index + 1,b.length())
                         .append(" MHz (")
                         .append(b, 0, index)
-                        .append(") ");
+                        .append("), ");
             }
         }
 
-        System.out.println("BANDA:\n" + resultadoBanda);
+        System.out.println("Banda: OK");
         return resultadoBanda.toString();
     }
 }

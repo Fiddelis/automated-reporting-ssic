@@ -5,7 +5,7 @@ import br.com.inatel.auditoria.utils.Regex;
 import java.util.regex.Pattern;
 
 public class Vizinhos extends Regex {
-    Pattern pattern = Pattern.compile("pv \\$NR_OF_REL\\s+(.+\\n)*");
+    Pattern pattern = Pattern.compile("pv \\$NR_OF_REL\\s+(?!=)(\\w+\\s)*(.+\\s)+");
 
     public String info(String logFile, String[] portadorasRequisitadas) {
         int index;
@@ -33,7 +33,7 @@ public class Vizinhos extends Regex {
                 }
             }
         }
-        System.out.println("Vizinhos:\n" + resultadoVizinhos);
+        System.out.println("Vizinhos: OK");
         return resultadoVizinhos.toString();
     }
 }

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="auditoriaRelatorio:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/auditoriaRelatorio_jar</output-path>
-    <root id="archive" name="auditoriaRelatorio.jar">
-      <element id="module-output" name="relatorio-automatizado-ssic" />
-    </root>
-  </artifact>
-</component>

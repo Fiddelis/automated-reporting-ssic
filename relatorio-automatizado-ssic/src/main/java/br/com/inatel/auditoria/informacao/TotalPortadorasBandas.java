@@ -61,11 +61,10 @@ public class TotalPortadorasBandas extends Regex {
         sbPortadorasBandas[1]
                 .append(")");
 
-        System.out.println("PORTADORAS:");
-        for(int i = 0; i < 2; i++) {
-            resultadoPortadorasBandas[i] = sbPortadorasBandas[i].toString();
-            System.out.println(resultadoPortadorasBandas[i]);
-        }
+        resultadoPortadorasBandas[0] = sbPortadorasBandas[0].toString();
+        resultadoPortadorasBandas[1] = sbPortadorasBandas[1].toString();
+
+        System.out.println("Portadoras: OK");
 
         return resultadoPortadorasBandas;
     }

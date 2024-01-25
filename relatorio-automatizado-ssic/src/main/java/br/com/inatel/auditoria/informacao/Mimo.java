@@ -9,8 +9,9 @@ public class Mimo extends Regex {
 
     public String info(String arquivoLog, String[] portadorasRequisitadas) {
         StringBuilder resultadoMimo = new StringBuilder();
-        String portadoraMimo;
         int index;
+        String mimoAnterior = "null";
+
         String[] mimo = procurarPorInformacao(arquivoLog, pattern)
                 .replaceAll("SectorCarrier=", "")
                 .replaceAll(" +\n", "\n")
@@ -20,28 +21,22 @@ public class Mimo extends Regex {
 
         trocarNomePortadoras(mimo);
 
-        for(int i = 1; i < mimo.length; i++) {
-            if(mimo[i].equals(mimo[i-1])) {
-                mimo[i-1] = "null";
+        for (int i = 0; i < mimo.length; i++) {
+            index = mimo[i].indexOf(":");
+            if (index == -1) continue;
+
+            for(int j = 0; j < portadorasRequisitadas.length; j++) {
+                if(portadorasRequisitadas[j].equals(mimo[j].substring(0, index)) && !mimoAnterior.equals(mimo[j].substring(index + 1))) {
+                    resultadoMimo
+                            .append("MIMO (")
+                            .append(mimo[i].substring(index + 1))
+                            .append(")\n");
+                    mimoAnterior = mimo[i].substring(index + 1);
+                }
             }
         }
 
-
-        for (String m : mimo) {
-            index = m.indexOf(":");
-            if(index == -1) continue;
-            portadoraMimo = m.substring(0, index);
-
-            for (String portadoraRequisitada : portadorasRequisitadas)
-                if (portadoraMimo.equals(portadoraRequisitada)) {
-                    resultadoMimo
-                            .append("MIMO ")
-                            .append(m.substring(index + 1))
-                            .append(" ");
-                }
-        }
-
-        System.out.println("MIMO:\n" + resultadoMimo);
+        System.out.println("MIMO: OK");
         return resultadoMimo.toString();
     }
 

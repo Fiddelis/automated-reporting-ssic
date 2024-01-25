@@ -25,8 +25,7 @@ public class Cgid extends Regex {
                 .replaceAll("\\n(?!$)", "/")
                 .replaceAll("\\n","");
 
-        System.out.println("CGID: ");
-        System.out.println(mcc + "-" + mnc + "-" + enbid + "-(" + cellId + ")");
+        System.out.println("CGID: OK");
         return mcc + "-" + mnc + "-" + enbid + "-(" + cellId + ")";
     }
 }

@@ -14,8 +14,6 @@ public class LatLong extends Regex {
                 .replaceAll("EUtranCell.*DD=\\w+ +", "")
                 .split("\\n");
 
-        System.out.println("LatLong: ");
-        System.out.println(latLong[0]);
         resultadoLatLong.append(latLong[0]);
 
         for(int i = 1; i < latLong.length; i++) {
@@ -24,6 +22,8 @@ public class LatLong extends Regex {
                 System.out.println(latLong[i]);
             }
         }
+
+        System.out.println("LatLong: OK");
 
         return resultadoLatLong.toString();
     }

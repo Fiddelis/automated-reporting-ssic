@@ -20,7 +20,7 @@ public class Tac extends Regex {
                 resultadoTac.append(tac[i]);
             }
         }
-        System.out.println("TAC:\n" + resultadoTac);
+        System.out.println("TAC: OK");
         return resultadoTac.toString();
     }
 }

@@ -34,7 +34,7 @@ public class Pci extends Regex {
         }
         resultadoPci.deleteCharAt(resultadoPci.length()-1);
 
-        System.out.println("PCI:\n" + resultadoPci);
+        System.out.println("PCI: OK");
         return resultadoPci.toString();
     }
 }
