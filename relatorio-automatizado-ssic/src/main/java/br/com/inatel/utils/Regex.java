@@ -1,4 +1,4 @@
-package br.com.inatel.auditoria.utils;
+package br.com.inatel.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
