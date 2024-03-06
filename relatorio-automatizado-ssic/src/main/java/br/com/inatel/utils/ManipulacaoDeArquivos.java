@@ -1,12 +1,9 @@
-package br.com.inatel.relatorio;
+package br.com.inatel.utils;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +12,22 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ManipulacaoDeArquivos {
+
+    public static String leituraArquivoLog(String arquivo) {
+        StringBuilder conteudo = new StringBuilder();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(arquivo), 8192)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                conteudo.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            System.out.println("LOG: LOG_NAO_ENCONTRADO");
+        }
+
+        return conteudo.toString();
+    }
+
 
     public static void editarTabelaSeisSetores(String site, String cidade, String uf, String pasta) {
         Row linha;
@@ -105,7 +118,6 @@ public class ManipulacaoDeArquivos {
             Path pastaPath = Paths.get(pastaDestino);
 
             try {
-                // Excluir a pasta e seu conteúdo
                 Files.walk(pastaPath)
                         .sorted(Comparator.reverseOrder())
                         .map(Path::toFile)
@@ -120,17 +132,14 @@ public class ManipulacaoDeArquivos {
             File destino = new File(pastaDestino);
             destino.mkdirs();
 
-            // Iterar sobre as entradas no arquivo ZIP
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 String caminhoCompletoDestino = pastaDestino + File.separator + zipEntry.getName();
                 File novoArquivo = new File(caminhoCompletoDestino);
 
-                // Criar diretórios se necessário
                 if (zipEntry.isDirectory()) {
                     novoArquivo.mkdirs();
                 } else {
-                    // Extrair o arquivo
                     try (FileOutputStream fileOutputStream = new FileOutputStream(novoArquivo)) {
                         int bytesRead;
                         while ((bytesRead = zipInputStream.read(buffer)) > 0) {
@@ -138,14 +147,29 @@ public class ManipulacaoDeArquivos {
                         }
                     }
                 }
-
                 zipInputStream.closeEntry();
             }
 
             System.out.println("Arquivo ZIP extraído com sucesso.");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("ERRO AO EXTRAIR ARQUIVO");
+        }
+    }
+
+    public static void copiarPowerPoint(String pastaDestino, String nomeSite, String portadoras) {
+        String origem = "C:\\Users\\lucas.ferreira\\Desktop\\Relatorio_Automatizado_SSIC_1.0\\ferramentas\\SINGLE SITE VERIFICATION_DL_SSV.pptx";
+        String destino = pastaDestino + "\\" + nomeSite + "\\SINGLE SITE VERIFICATION_DL_SSV_VIVO_" + nomeSite + "_" + portadoras.replaceAll(" ", "_");
+
+        try {
+            Path origemPath = Paths.get(origem);
+            Path destinoPath = Paths.get(destino + ".pptx");
+
+            Files.copy(origemPath, destinoPath);
+
+            System.out.println("PowerPoint copiado com sucesso!\n");
+        } catch (IOException e) {
+            System.out.println("Ocorreu um erro ao copiar o arquivo");
         }
     }
 }
