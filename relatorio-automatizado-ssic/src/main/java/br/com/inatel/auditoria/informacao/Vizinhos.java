@@ -1,7 +1,6 @@
 package br.com.inatel.auditoria.informacao;
 
-import br.com.inatel.auditoria.utils.Regex;
-
+import br.com.inatel.utils.Regex;
 import java.util.regex.Pattern;
 
 public class Vizinhos extends Regex {
@@ -13,6 +12,11 @@ public class Vizinhos extends Regex {
                 .replaceAll("] = ", ":")
                 .replaceAll("((pv )?\\$NR_OF_REL(\\[|\\n*))|\\n{2,}| +", "")
                 .split("\n");
+
+        if(vizinhos[0].equals("INFORMAÇAO_NAO_ENCONTRADA")) {
+            System.out.println("VIZINHOS: INFORMAÇAO_NAO_ENCONTRADA");
+            return "INFORMAÇAO_NAO_ENCONTRADA";
+        }
 
         StringBuilder resultadoVizinhos = new StringBuilder();
         String[] vizinhosComparacao = vizinhos.clone();
@@ -33,7 +37,7 @@ public class Vizinhos extends Regex {
                 }
             }
         }
-        System.out.println("Vizinhos: OK");
+        System.out.println("VIZINHOS: OK");
         return resultadoVizinhos.toString();
     }
 }

@@ -1,28 +1,25 @@
 package br.com.inatel.auditoria;
 
 import br.com.inatel.auditoria.informacao.*;
-import br.com.inatel.auditoria.utils.Regex;
+import br.com.inatel.utils.Regex;
 
 public class Relatorio extends Regex {
-    Vizinhos logVizinhos = new Vizinhos();
-    LatLong logLatLong = new LatLong();
-    Mimo logMimo = new Mimo();
-    Tac logTac = new Tac();
-    Banda logBanda = new Banda();
-    Cgid logCgid = new Cgid();
-    Pci logPci = new Pci();
-    TotalPortadorasBandas logTotalPortadorasBandas = new TotalPortadorasBandas();
+    static Vizinhos logVizinhos = new Vizinhos();
+    static LatLong logLatLong = new LatLong();
+    static Mimo logMimo = new Mimo();
+    static Tac logTac = new Tac();
+    static Banda logBanda = new Banda();
+    static Cgid logCgid = new Cgid();
+    static Pci logPci = new Pci();
+    static TotalPortadorasBandas logTotalPortadorasBandas = new TotalPortadorasBandas();
 
-    public void gerarScript(String[] site, String pasta) {
+    public static void gerarScript(String[] site, String pasta) {
+        System.out.println("██████████ SCRIPT ██████████");
+
         for (int i = 0; site[i] != null; i++) {
             System.out.println();
-            if (i == 0) {
-                System.out.println("amos " + site[i]);
-            } else {
-                System.out.println("l amos " + site[i]);
-            }
-            System.out.println("@L " + pasta + "\\ferramentas\\logs\\" + site[i] + ".log\n" +
-                    "lt all\n" +
+            System.out.println("amos " + site[i]);
+            System.out.println("lt all\n" +
                     "unset $CELL96\n" +
                     "unset $NR_OF_REL\n" +
                     "hget ^EUtranCell.*DD= EUtranCell.*DDId\n" +
@@ -31,6 +28,7 @@ public class Relatorio extends Regex {
                     "lpr $CELL.*CellRelation=\n" +
                     "$NR_OF_REL[$CELL] = $nr_of_mos\n" +
                     "Done\n" +
+                    "@L " + pasta + "\\ferramentas\\logs\\" + site[i] + ".log\n" +
                     "pv $NR_OF_REL \n" +
                     "hget SectorCarrier= noOfTxAntennas|noOfrxAntennas\n" +
                     "hget . latitude|longitude\n" +
@@ -41,12 +39,14 @@ public class Relatorio extends Regex {
                     "hget EUtranCellFDD=.*. ^CellId\n" +
                     "hget EUtranCell.*DD= physicalLayerCellId$\n" +
                     "hget . earfcndl\n" +
-                    "@L-");
+                    "@L-\n" +
+                    "exit");
         }
     }
 
-    public void gerarInformacao(String nomeSite, String arquivoLog, String[] portadorasRequisitadas, String pasta) {
+    public static void gerarInformacao(String nomeSite, String arquivoLog, String[] portadorasRequisitadas, String pasta) {
 
+        System.out.println("██████████ EXCEL ██████████");
         System.out.println("SITE: " + nomeSite);
         String vizinhos = logVizinhos.info(arquivoLog, portadorasRequisitadas);
         String latLong = logLatLong.info(arquivoLog);
@@ -60,6 +60,5 @@ public class Relatorio extends Regex {
         Excel excel = new Excel();
 
         excel.criarAuditoria(nomeSite, portadorasRequisitadas, totalPortadorasBandas, cgid, vizinhos, tac, pci, mimo, latLong, banda, pasta);
-        System.out.println("-------------------");
     }
 }

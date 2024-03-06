@@ -1,7 +1,6 @@
 package br.com.inatel.auditoria.informacao;
 
-import br.com.inatel.auditoria.utils.Regex;
-
+import br.com.inatel.utils.Regex;
 import java.util.regex.Pattern;
 
 public class TotalPortadorasBandas extends Regex {
@@ -10,24 +9,31 @@ public class TotalPortadorasBandas extends Regex {
     public String[] info(String arquivoLog) {
         int index;
         int total = 1;
-        StringBuilder resultadoPortadoras = new StringBuilder();
-        StringBuilder resultadoBandas = new StringBuilder();
+        String[] resultadoPortadorasBandas = new String[2];
+
         String[] portadorasBandas = procurarPorInformacao(arquivoLog, pattern)
                 .replaceAll("earfcndl\\n=+\\n|EUtranCell.*DD=| {2,}", "")
                 .replaceAll(" ", ":")
                 .split("\n");
 
+        if(portadorasBandas[0].equals("INFORMAÇAO_NAO_ENCONTRADA")) {
+            System.out.println("PORTADORAS: INFORMAÇAO_NAO_ENCONTRADA");
+            resultadoPortadorasBandas[0] = "INFORMAÇAO_NAO_ENCONTRADA";
+            resultadoPortadorasBandas[1] = "INFORMAÇAO_NAO_ENCONTRADA";
+            return resultadoPortadorasBandas;
+        }
+
         trocarNomePortadoras(portadorasBandas);
 
-        String[] resultadoPortadorasBandas = new String[2];
+
 
         StringBuilder[] sbPortadorasBandas = new StringBuilder[2];
         sbPortadorasBandas[0] = new StringBuilder();
         sbPortadorasBandas[1] = new StringBuilder();
 
-        for(int i = 1; i < portadorasBandas.length; i++) {
+        for(int i = portadorasBandas.length - 1; i > 0; i--) {
             if(portadorasBandas[i - 1].equals(portadorasBandas[i])) {
-                portadorasBandas[i - 1] = "null";
+                portadorasBandas[i] = "null";
             } else {
                 total++;
             }
@@ -40,7 +46,7 @@ public class TotalPortadorasBandas extends Regex {
                 .append(total)
                 .append("(");
 
-        for(int i = 0; i < portadorasBandas.length; i++) {
+        for(int i = portadorasBandas.length - 1; i >= 0 ; i--) {
             index = portadorasBandas[i].indexOf(":");
             if (index != -1) {
                 sbPortadorasBandas[0]
@@ -48,7 +54,7 @@ public class TotalPortadorasBandas extends Regex {
                 sbPortadorasBandas[1]
                         .append(portadorasBandas[i], index + 1, portadorasBandas[i].length());
 
-                if(i != portadorasBandas.length - 1) {
+                if(i != 0) {
                     sbPortadorasBandas[0]
                             .append("/");
                     sbPortadorasBandas[1]
@@ -64,7 +70,7 @@ public class TotalPortadorasBandas extends Regex {
         resultadoPortadorasBandas[0] = sbPortadorasBandas[0].toString();
         resultadoPortadorasBandas[1] = sbPortadorasBandas[1].toString();
 
-        System.out.println("Portadoras: OK");
+        System.out.println("PORTADORAS: OK");
 
         return resultadoPortadorasBandas;
     }

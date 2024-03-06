@@ -24,12 +24,18 @@ public class Excel {
             }
         }
 
-        int totalCelulas = 1;
+        int totalCelulas = -2;
 
         int indice = cgid.indexOf("/");
         while (indice != -1) {
             totalCelulas++;
             indice = cgid.indexOf("/", indice + 1);
+        }
+
+        indice = cgid.indexOf("-");
+        while (indice != -1) {
+            totalCelulas++;
+            indice = cgid.indexOf("-", indice + 1);
         }
 
         try (FileInputStream fileIn = new FileInputStream(pasta + "\\ferramentas\\auditoria.xlsx");

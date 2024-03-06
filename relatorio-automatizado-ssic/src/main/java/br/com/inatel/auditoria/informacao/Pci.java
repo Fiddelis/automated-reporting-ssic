@@ -1,7 +1,6 @@
 package br.com.inatel.auditoria.informacao;
 
-import br.com.inatel.auditoria.utils.Regex;
-
+import br.com.inatel.utils.Regex;
 import java.util.regex.Pattern;
 
 public class Pci extends Regex {
@@ -15,6 +14,11 @@ public class Pci extends Regex {
                 .replaceAll(" *\\n(?!$)", "\n")
                 .split("\n");
 
+        if(pci[0].equals("INFORMAÇAO_NAO_ENCONTRADA")) {
+            System.out.println("PCI: INFORMAÇAO_NAO_ENCONTRADA");
+            return "INFORMAÇAO_NAO_ENCONTRADA";
+        }
+
         String portadoraPci;
         StringBuilder resultadoPci = new StringBuilder();
 
@@ -25,11 +29,10 @@ public class Pci extends Regex {
             if (index != -1) {
                 portadoraPci = pci[i].substring(0, index);
 
-                for (String portadoraRequisitada : portadorasRequisitadas)
-                    if (portadoraPci.equals(portadoraRequisitada)) {
+                if(portadorasRequisitadas[0].equals(portadoraPci)) {
                         resultadoPci.append(pci[i], index + 1, pci[i].length());
-                            resultadoPci.append("/");
-                    }
+                        resultadoPci.append("/");
+                }
             }
         }
         resultadoPci.deleteCharAt(resultadoPci.length()-1);
