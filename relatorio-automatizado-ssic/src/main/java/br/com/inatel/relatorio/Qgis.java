@@ -1,48 +1,49 @@
 package br.com.inatel.relatorio;
 
+import br.com.inatel.utils.ManipulacaoDeArquivos;
 import org.sikuli.script.FindFailed;
 import org.sikuli.script.App;
 import org.sikuli.script.Screen;
 
 public class Qgis extends ManipulacaoDeArquivos {
-    Screen tela = new Screen();
+    static Screen tela = new Screen();
 
-    public void gerarRelatorio(String[] portadoras, String site, String cidade, char siteSeisSetores, String pasta) {
+    public static void gerarRelatorio(String[] portadoras, String site, String cidade, char siteSeisSetores, String pasta) {
         String uf = site.substring(site.length() - 2);
         String imgQgis = pasta + "\\ferramentas\\qgis\\";
-        String pastaOutput = pasta + "\\relatorios";
+        String pastaSite = pasta + "\\relatorios\\" + site;
 
-        String pastaSite;
-        String pastaPortadora = null;
+        String pastaPortadora;
 
         String caminhoArquivoZip;
         String pastaDestino;
 
-        String ssvReportProcessing = null;
-        String ssvReportGenerator = null;
+        String ssvReportProcessing;
+        String ssvReportGenerator;
 
         switch (siteSeisSetores) {
             case 's' -> {
-                    pastaSite = criarPasta(pastaOutput, site);
-                    pastaPortadora = criarPasta(pastaSite, "6_setores");
+                System.out.println("\n██████████ 6 SETORES ██████████");
 
-                    ssvReportProcessing = pasta + "\\ferramentas\\templates\\SRB_VIVO_six_sectors_allfreq\\1 - PythonCode\\SSV_Report Processing.qgz";
-                    ssvReportGenerator = pasta + "\\ferramentas\\templates\\SRB_VIVO_six_sectors_allfreq\\SSV_ReportGenerator_all_frequencies.qgz";
+                pastaPortadora = criarPasta(pastaSite, "6_setores");
 
-                    caminhoArquivoZip = pasta + "\\output\\output_" + site + ".zip";
-                    pastaDestino = pasta + "\\ferramentas\\templates\\SRB_VIVO_six_sectors_allfreq\\1 - PythonCode\\output";
+                ssvReportProcessing = pasta + "\\ferramentas\\templates\\SRB_VIVO_six_sectors_allfreq\\1 - PythonCode\\SSV_Report Processing.qgz";
+                ssvReportGenerator = pasta + "\\ferramentas\\templates\\SRB_VIVO_six_sectors_allfreq\\SSV_ReportGenerator_all_frequencies.qgz";
 
-                    editarTabelaSeisSetores(site, cidade, uf, pasta);
-                    extrairArquivoCompactado(caminhoArquivoZip, pastaDestino);
+                caminhoArquivoZip = pasta + "\\output\\output_" + site + ".zip";
+                pastaDestino = pasta + "\\ferramentas\\templates\\SRB_VIVO_six_sectors_allfreq\\1 - PythonCode\\output";
 
-                    executarQgis(ssvReportProcessing, ssvReportGenerator, imgQgis, pastaPortadora);
+                editarTabelaSeisSetores(site, cidade, uf, pasta);
+                extrairArquivoCompactado(caminhoArquivoZip, pastaDestino);
+
+                executarQgis(ssvReportProcessing, ssvReportGenerator, imgQgis, pastaPortadora);
             }
             case 'n' -> {
-                pastaSite = criarPasta(pastaOutput, site);
-
                 for (String portadora : portadoras) {
-                    pastaPortadora = criarPasta(pastaSite, portadora);
+                    System.out.println("\n██████████ " + portadora + " ██████████");
 
+                    pastaPortadora = criarPasta(pastaSite, portadora);
+                    System.out.println(pastaPortadora);
                     ssvReportProcessing = pasta + "\\ferramentas\\templates\\01 - SRB_Template\\" + portadora + " Mhz\\1 - PythonCode\\SSV_Report Processing_" + portadora + "Mhz.qgz";
                     ssvReportGenerator = pasta + "\\ferramentas\\templates\\01 - SRB_Template\\" + portadora + " Mhz\\SSV_ReportGenerator_" + portadora + "Mhz.qgz";
                     caminhoArquivoZip = pasta + "\\output\\output_" + site + ".zip";
@@ -57,7 +58,7 @@ public class Qgis extends ManipulacaoDeArquivos {
         }
     }
 
-    private void executarQgis(String ssvReportProcessing, String ssvReportGenerator, String imgQgis, String pastaPortadora) {
+    private static void executarQgis(String ssvReportProcessing, String ssvReportGenerator, String imgQgis, String pastaPortadora) {
         try {
             App.open(ssvReportProcessing);
             tela.wait(imgQgis + "1-buscar.png", 1200);
@@ -93,14 +94,15 @@ public class Qgis extends ManipulacaoDeArquivos {
             Thread.sleep(10000);
             tela.doubleClick(imgQgis + "sair.png");
             Thread.sleep(10000);
-            tela.wait(imgQgis + "sair_vermelho.png");
+            tela.wait(imgQgis + "sair_vermelho.png", 1200);
             tela.click(imgQgis + "sair_vermelho.png");
-            tela.wait(imgQgis + "15-descartar");
+            Thread.sleep(5000);
+            tela.wait(imgQgis + "15-descartar", 1200);
             tela.click(imgQgis + "15-descartar");
             Thread.sleep(15000);
 
         } catch (FindFailed e) {
-            e.printStackTrace();
+            System.out.println("IMAGEM_NAO_ENCONTRADA_NA_TELA");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
